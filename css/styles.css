@@ -1,0 +1,343 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f5f5f5;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    min-height: 100vh;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.post-editor {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+#post-content {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: none;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+.post-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.upload-btn {
+    padding: 8px 15px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #555;
+    font-size: 14px;
+}
+
+.upload-btn:hover {
+    background-color: #e0e0e0;
+}
+
+#image-input {
+    display: none;
+}
+
+#image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    gap: 5px;
+}
+
+.preview-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+#post-btn {
+    padding: 8px 20px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#post-btn:hover {
+    background-color: #0d5dcd;
+}
+
+.post {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.post-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.post-author {
+    font-weight: bold;
+}
+
+.post-time {
+    color: #999;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.post-content {
+    margin-bottom: 10px;
+}
+
+.post-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+
+.post-image {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: 4px;
+}
+
+.post-actions-bar {
+    display: flex;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+.like-btn, .comment-btn {
+    background: none;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    color: #555;
+    display: flex;
+    align-items: center;
+}
+
+.like-btn.liked {
+    color: #e74c3c;
+}
+
+.like-btn i, .comment-btn i {
+    margin-right: 5px;
+}
+
+.comments {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.comment {
+    display: flex;
+    margin-bottom: 8px;
+}
+
+.comment-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comment-content {
+    flex: 1;
+}
+
+.comment-author {
+    font-weight: bold;
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+.comment-text {
+    font-size: 14px;
+}
+
+.comment-input {
+    display: flex;
+    margin-top: 10px;
+}
+
+.comment-input input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-right: 5px;
+}
+
+.comment-input button {
+    padding: 8px 15px;
+    background-color: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+/* 基础样式优化 */
+body {
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+}
+
+/* 容器样式调整 - 减少两侧留白 */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px; /* 减少左右内边距 */
+}
+
+/* 头部样式美化 */
+header {
+  background-color: #2c3e50;
+  color: white;
+  padding: 1rem 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 导航栏美化 */
+nav ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+nav li {
+  margin-left: 1.5rem;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #3498db;
+}
+
+/* 主要内容区域 */
+.main-content {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+/* 按钮样式美化 */
+.btn {
+  display: inline-block;
+  background-color: #3498db;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #2980b9;
+}
+
+/* 页脚美化 */
+footer {
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  padding: 1.5rem 0;
+  text-align: center;
+  margin-top: 2rem;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 15px; /* 在小屏幕上进一步减少留白 */
+  }
+  
+  .header-content {
+    flex-direction: column;
+  }
+  
+  nav ul {
+    margin-top: 1rem;
+  }
+  
+  nav li {
+    margin: 0 0.8rem;
+  }
+}
