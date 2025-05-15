@@ -1,252 +1,256 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+// 图片预览功能
+document.getElementById('image-input').addEventListener('change', function(e) {
+    const preview = document.getElementById('image-preview');
+    preview.innerHTML = '';
+    
+    const files = e.target.files;
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (!file.type.match('image.*')) continue;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'preview-image';
+            preview.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+    }
+});
 
-body {
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
-    background-color: #f5f5f5;
-    color: #333;
-}
-
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-header {
-    background-color: #4267B2;
-    color: white;
-    padding: 15px 0;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-}
-
-.avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-    object-fit: cover;
-}
-
-.post-editor {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-#post-content {
-    width: 100%;
-    min-height: 100px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    resize: vertical;
-    margin-bottom: 15px;
-    font-family: inherit;
-}
-
-.post-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.image-upload {
-    position: relative;
-}
-
-#image-input {
-    display: none;
-}
-
-.upload-btn {
-    background-color: #f0f2f5;
-    color: #333;
-    padding: 8px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: inline-block;
-}
-
-.upload-btn:hover {
-    background-color: #e4e6eb;
-}
-
-#image-preview {
-    display: flex;
-    flex-wrap: wrap;
-    margin-top: 10px;
-}
-
-.preview-image {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-}
-
-#post-btn {
-    background-color: #4267B2;
-    color: white;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-#post-btn:hover {
-    background-color: #365899;
-}
-
-.feed {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.post {
-    background-color: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-}
-
-.post-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.post-user {
-    font-weight: bold;
-    margin-left: 10px;
-}
-
-.post-time {
-    color: #65676B;
-    font-size: 0.9em;
-    margin-left: 10px;
-}
-
-.post-content {
-    margin-bottom: 15px;
-}
-
-.post-images {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.post-image {
-    max-width: 100%;
-    max-height: 400px;
-    border-radius: 8px;
-}
-
-.post-actions {
-    display: flex;
-    border-top: 1px solid #ddd;
-    padding-top: 10px;
-}
-
-.action-btn {
-    flex: 1;
-    text-align: center;
-    padding: 8px;
-    color: #65676B;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.action-btn:hover {
-    background-color: #f0f2f5;
-}
-
-.comments {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid #ddd;
-}
-
-.comment-input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    font-family: inherit;
-}
-
-.comment-btn {
-    background-color: #4267B2;
-    color: white;
-    border: none;
-    padding: 8px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.comment-btn:hover {
-    background-color: #365899;
-}
-
-.comment-list {
-    list-style: none;
-}
-
-.comment-item {
-    margin-bottom: 10px;
-    display: flex;
-    align-items: flex-start;
-}
-
-.comment-avatar {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    margin-right: 10px;
-    object-fit: cover;
-}
-
-.comment-content {
-    flex: 1;
-}
-
-.comment-time {
-    color: #65676B;
-    font-size: 0.9em;
-}
-
-@media (max-width: 768px) {
-    .container {
-        padding: 0 10px;
+// 发布帖子功能
+document.getElementById('post-btn').addEventListener('click', function() {
+    const content = document.getElementById('post-content').value.trim();
+    const imageInput = document.getElementById('image-input');
+    
+    if (!content && imageInput.files.length === 0) {
+        alert('请输入内容或添加图片');
+        return;
     }
     
-    .post-image {
-        max-height: 300px;
+    // 创建新帖子
+    const post = document.createElement('div');
+    post.className = 'post';
+    
+    // 帖子头部
+    const postHeader = document.createElement('div');
+    postHeader.className = 'post-header';
+    
+    const avatar = document.createElement('img');
+    avatar.src = 'https://via.placeholder.com/40';
+    avatar.className = 'avatar';
+    avatar.alt = '用户头像';
+    
+    const username = document.createElement('span');
+    username.className = 'post-user';
+    username.textContent = '用户名';
+    
+    const time = document.createElement('span');
+    time.className = 'post-time';
+    time.textContent = '刚刚';
+    
+    postHeader.appendChild(avatar);
+    postHeader.appendChild(username);
+    postHeader.appendChild(time);
+    
+    // 帖子内容
+    const postContent = document.createElement('div');
+    postContent.className = 'post-content';
+    postContent.textContent = content;
+    
+    // 帖子图片
+    const postImages = document.createElement('div');
+    postImages.className = 'post-images';
+    
+    const files = imageInput.files;
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        if (!file.type.match('image.*')) continue;
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.className = 'post-image';
+            img.alt = '帖子图片';
+            postImages.appendChild(img);
+        }
+        reader.readAsDataURL(file);
     }
-}
+    
+    // 帖子操作
+    const postActions = document.createElement('div');
+    postActions.className = 'post-actions';
+    
+    const likeBtn = document.createElement('div');
+    likeBtn.className = 'action-btn like-btn';
+    likeBtn.textContent = '点赞';
+    
+    const commentBtn = document.createElement('div');
+    commentBtn.className = 'action-btn comment-btn';
+    commentBtn.textContent = '评论';
+    
+    const shareBtn = document.createElement('div');
+    shareBtn.className = 'action-btn share-btn';
+    shareBtn.textContent = '分享';
+    
+    postActions.appendChild(likeBtn);
+    postActions.appendChild(commentBtn);
+    postActions.appendChild(shareBtn);
+    
+    // 评论部分
+    const comments = document.createElement('div');
+    comments.className = 'comments';
+    comments.style.display = 'none';
+    
+    const commentInput = document.createElement('input');
+    commentInput.type = 'text';
+    commentInput.className = 'comment-input';
+    commentInput.placeholder = '评论...';
+    
+    const commentBtn = document.createElement('button');
+    commentBtn.className = 'comment-btn';
+    commentBtn.textContent = '发布评论';
+    
+    const commentList = document.createElement('ul');
+    commentList.className = 'comment-list';
+    
+    comments.appendChild(commentInput);
+    comments.appendChild(commentBtn);
+    comments.appendChild(commentList);
+    
+    // 添加事件监听器
+    likeBtn.addEventListener('click', function() {
+        alert('你点赞了这条帖子！');
+    });
+    
+    commentBtn.addEventListener('click', function() {
+        const commentText = commentInput.value.trim();
+        if (!commentText) {
+            alert('请输入评论内容');
+            return;
+        }
+        
+        const commentItem = document.createElement('li');
+        commentItem.className = 'comment-item';
+        
+        const commentAvatar = document.createElement('img');
+        commentAvatar.src = 'https://via.placeholder.com/30';
+        commentAvatar.className = 'comment-avatar';
+        commentAvatar.alt = '评论用户头像';
+        
+        const commentContent = document.createElement('div');
+        commentContent.className = 'comment-content';
+        
+        const commentUser = document.createElement('span');
+        commentUser.className = 'post-user';
+        commentUser.textContent = '用户名';
+        
+        const commentTime = document.createElement('span');
+        commentTime.className = 'comment-time';
+        commentTime.textContent = '刚刚';
+        
+        const commentTextDiv = document.createElement('div');
+        commentTextDiv.textContent = commentText;
+        
+        commentContent.appendChild(commentUser);
+        commentContent.appendChild(commentTime);
+        commentContent.appendChild(commentTextDiv);
+        
+        commentItem.appendChild(commentAvatar);
+        commentItem.appendChild(commentContent);
+        
+        commentList.appendChild(commentItem);
+        commentInput.value = ''; // 清空评论框
+    });
+    
+    shareBtn.addEventListener('click', function() {
+        alert('你分享了这条帖子！');
+    });
+    
+    commentBtn.addEventListener('click', function() {
+        comments.style.display = comments.style.display === 'none' ? 'block' : 'none';
+    });
+    
+    // 将所有元素添加到帖子中
+    post.appendChild(postHeader);
+    post.appendChild(postContent);
+    post.appendChild(postImages);
+    post.appendChild(postActions);
+    post.appendChild(comments);
+    
+    // 将新帖子添加到帖子流中
+    const feed = document.getElementById('feed');
+    feed.prepend(post);
+    
+    // 清空输入框
+    document.getElementById('post-content').value = '';
+    document.getElementById('image-input').value = '';
+    document.getElementById('image-preview').innerHTML = '';
+});
+
+// 初始化评论按钮事件监听
+document.querySelectorAll('.comment-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const comments = this.nextElementSibling;
+        comments.style.display = comments.style.display === 'none' ? 'block' : 'none';
+    });
+});
+
+// 初始化点赞、评论和分享按钮事件监听
+document.querySelectorAll('.like-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        alert('你点赞了这条帖子！');
+    });
+});
+
+document.querySelectorAll('.share-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        alert('你分享了这条帖子！');
+    });
+});
+
+document.querySelectorAll('.comments').forEach(comments => {
+    const commentList = comments.querySelector('.comment-list');
+    comments.querySelector('.comment-btn').addEventListener('click', function() {
+        const commentInput = comments.querySelector('.comment-input');
+        const commentText = commentInput.value.trim();
+        if (!commentText) {
+            alert('请输入评论内容');
+            return;
+        }
+        
+        const commentItem = document.createElement('li');
+        commentItem.className = 'comment-item';
+        
+        const commentAvatar = document.createElement('img');
+        commentAvatar.src = 'https://via.placeholder.com/30';
+        commentAvatar.className = 'comment-avatar';
+        commentAvatar.alt = '评论用户头像';
+        
+        const commentContent = document.createElement('div');
+        commentContent.className = 'comment-content';
+        
+        const commentUser = document.createElement('span');
+        commentUser.className = 'post-user';
+        commentUser.textContent = '用户名';
+        
+        const commentTime = document.createElement('span');
+        commentTime.className = 'comment-time';
+        commentTime.textContent = '刚刚';
+        
+        const commentTextDiv = document.createElement('div');
+        commentTextDiv.textContent = commentText;
+        
+        commentContent.appendChild(commentUser);
+        commentContent.appendChild(commentTime);
+        commentContent.appendChild(commentTextDiv);
+        
+        commentItem.appendChild(commentAvatar);
+        commentItem.appendChild(commentContent);
+        
+        commentList.appendChild(commentItem);
+        commentInput.value = ''; // 清空评论框
+    });
+});
