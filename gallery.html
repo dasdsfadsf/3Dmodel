@@ -159,112 +159,112 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/OBJLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
-    <script>
-        // 初始化Three.js场景
-        let scene, camera, renderer, controls, model;
+   <script>
+    // 初始化Three.js场景
+    let scene, camera, renderer, controls, model;
+    
+    function init() {
+        // 创建场景
+        scene = new THREE.Scene();
+        scene.background = new THREE.Color(0xf0f0f0);
         
-        function init() {
-            // 创建场景
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0xf0f0f0);
-            
-            // 创建相机
-            camera = new THREE.PerspectiveCamera(75, 800 / 500, 0.1, 1000);
-            camera.position.z = 5;
-            
-            // 创建渲染器
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(800, 500);
-            document.getElementById('model-container').appendChild(renderer.domElement);
-            
-            // 添加光源
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            scene.add(ambientLight);
-            
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            directionalLight.position.set(1, 1, 1);
-            scene.add(directionalLight);
-            
-            // 添加坐标轴辅助
-            const axesHelper = new THREE.AxesHelper(5);
-            scene.add(axesHelper);
-            
-            // 添加轨道控制器
-            controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping = true;
-            controls.dampingFactor = 0.05;
-            
-            // 添加网格地面
-            const gridHelper = new THREE.GridHelper(10, 10);
-            scene.add(gridHelper);
-            
-            // 设置按钮事件
-            setupControls();
-            
-            // 开始动画循环
-            animate();
-        }
+        // 创建相机
+        camera = new THREE.PerspectiveCamera(75, 800 / 500, 0.1, 1000);
+        camera.position.z = 5;
         
-        function setupControls() {
-            // 模型选择器
-            document.getElementById('model-select').addEventListener('change', function(e) {
-                const modelPath = e.target.value;
-                if (modelPath) {
-                    loadModel(modelPath);
-                    
-                    // 更新模型信息
-                    const modelName = modelPath.split('/').pop().replace('.obj', '');
-                    document.getElementById('model-title').textContent = modelName;
-                    document.getElementById('model-description').textContent = `已加载模型: ${modelName}`;
-                }
-            });
-            
-            // 旋转按钮
-            document.getElementById('rotate-btn').addEventListener('click', function() {
-                controls.autoRotate = !controls.autoRotate;
-                this.textContent = controls.autoRotate ? "停止旋转" : "旋转";
-            });
-            
-            // 放大按钮
-            document.getElementById('zoom-in-btn').addEventListener('click', function() {
-                camera.fov -= 5;
-                camera.updateProjectionMatrix();
-            });
-            
-            // 缩小按钮
-            document.getElementById('zoom-out-btn').addEventListener('click', function() {
-                camera.fov += 5;
-                camera.updateProjectionMatrix();
-            });
-            
-            // 文件上传
-            document.getElementById('model-upload').addEventListener('change', function(e) {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    loadModel(event.target.result);
-                };
-                reader.readAsDataURL(file);
+        // 创建渲染器
+        renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(800, 500);
+        document.getElementById('model-container').appendChild(renderer.domElement);
+        
+        // 添加光源
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+        
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        scene.add(directionalLight);
+        
+        // 添加坐标轴辅助
+        const axesHelper = new THREE.AxesHelper(5);
+        scene.add(axesHelper);
+        
+        // 添加轨道控制器
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        
+        // 添加网格地面
+        const gridHelper = new THREE.GridHelper(10, 10);
+        scene.add(gridHelper);
+        
+        // 设置按钮事件
+        setupControls();
+        
+        // 开始动画循环
+        animate();
+    }
+    
+    function setupControls() {
+        // 模型选择器
+        document.getElementById('model-select').addEventListener('change', function(e) {
+            const modelPath = e.target.value;
+            if (modelPath) {
+                loadModel(modelPath);
                 
                 // 更新模型信息
-                document.getElementById('model-title').textContent = file.name.replace('.obj', '');
-                document.getElementById('model-description').textContent = `已加载模型: ${file.name}`;
-            });
+                const modelName = modelPath.split('/').pop().replace('.obj', '');
+                document.getElementById('model-title').textContent = modelName;
+                document.getElementById('model-description').textContent = `已加载模型: ${modelName}`;
+            }
+        });
+        
+        // 旋转按钮
+        document.getElementById('rotate-btn').addEventListener('click', function() {
+            controls.autoRotate = !controls.autoRotate;
+            this.textContent = controls.autoRotate ? "停止旋转" : "旋转";
+        });
+        
+        // 放大按钮
+        document.getElementById('zoom-in-btn').addEventListener('click', function() {
+            camera.fov -= 5;
+            camera.updateProjectionMatrix();
+        });
+        
+        // 缩小按钮
+        document.getElementById('zoom-out-btn').addEventListener('click', function() {
+            camera.fov += 5;
+            camera.updateProjectionMatrix();
+        });
+        
+        // 文件上传
+        document.getElementById('model-upload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                loadModel(event.target.result);
+            };
+            reader.readAsDataURL(file);
+            
+            // 更新模型信息
+            document.getElementById('model-title').textContent = file.name.replace('.obj', '');
+            document.getElementById('model-description').textContent = `已加载模型: ${file.name}`;
+        });
+    }
+    
+    function loadModel(url) {
+        // 移除现有模型
+        if (model) {
+            scene.remove(model);
         }
         
-           function loadModel(url) {
-            // 移除现有模型
-            if (model) {
-                scene.remove(model);
-            }
-            
-            // 创建加载器
-            const loader = new THREE.OBJLoader();
-            
-            // 加载模型
-          loader.load(
+        // 创建加载器
+        const loader = new THREE.OBJLoader();
+        
+        // 加载模型
+        loader.load(
             url,
             function(object) {
                 model = object;
@@ -275,7 +275,9 @@
                 const size = bbox.getSize(new THREE.Vector3());
                 
                 // 将模型中心移动到原点
-                model.position.sub(center);
+                model.position.x -= center.x;
+                model.position.y -= center.y;
+                model.position.z -= center.z;
                 
                 // 自动缩放以适应视图
                 const maxDim = Math.max(size.x, size.y, size.z);
@@ -286,7 +288,7 @@
                 scene.add(model);
                 
                 // 调整相机位置
-                camera.position.set(0, maxDim, maxDim * 2); // 根据模型大小动态调整相机距离
+                camera.position.set(0, 0, maxDim * 2); // 根据模型大小动态调整相机距离
                 camera.lookAt(0, 0, 0);
                 controls.target.set(0, 0, 0);
                 controls.update();
@@ -303,15 +305,15 @@
             }
         );
     }
-        
-        function animate() {
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
-        }
-        
-        // 初始化场景
-        window.onload = init;
-    </script>
+    
+    function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+    
+    // 初始化场景
+    window.onload = init;
+</script>
 </body>
 </html>
