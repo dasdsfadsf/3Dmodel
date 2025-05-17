@@ -264,42 +264,55 @@
             const loader = new THREE.OBJLoader();
             
             // 加载模型
-            loader.load(
-                url,
-                function(object) {
-                    model = object;
-                    
-                    // 计算模型边界框以居中显示
-                    const bbox = new THREE.Box3().setFromObject(model);
-                    const center = bbox.getCenter(new THREE.Vector3());
-                    const size = bbox.getSize(new THREE.Vector3());
-                    
-                    // 调整模型位置和缩放
-                    model.position.x += (model.position.x - center.x);
-                    model.position.y += (model.position.y - center.y);
-                    model.position.z += (model.position.z - center.z);
-                    
-                    // 自动缩放以适应视图
-                    const maxDim = Math.max(size.x, size.y, size.z);
-                    const scale = 5.0 / maxDim;
-                    model.scale.set(scale, scale, scale);
-                    
-                    // 添加到场景
-                    scene.add(model);
-                    
-                    // 重置相机位置
-                    camera.position.z = 10;
-                    controls.reset();
-                },
-                function(xhr) {
-                    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-                },
-                function(error) {
-                    console.error('An error happened', error);
-                    document.getElementById('model-description').textContent = '模型加载失败，请检查文件格式';
-                }
-            );
+           function loadModel(url) {
+    // 移除现有模型
+    if (model) {
+        scene.remove(model);
+    }
+    
+    // 创建加载器
+    const loader = new THREE.OBJLoader();
+    
+    // 加载模型
+    loader.load(
+        url,
+        function(object) {
+            model = object;
+            
+            // 计算模型边界框
+            const bbox = new THREE.Box3().setFromObject(model);
+            const center = bbox.getCenter(new THREE.Vector3());
+            const size = bbox.getSize(new THREE.Vector3());
+            
+            // 将模型中心移动到原点
+            model.position.sub(center);
+            
+            // 自动缩放以适应视图
+            const maxDim = Math.max(size.x, size.y, size.z);
+            const scale = 3.0 / maxDim; // 调整缩放系数
+            model.scale.set(scale, scale, scale);
+            
+            // 添加到场景
+            scene.add(model);
+            
+            // 调整相机位置
+            camera.position.set(0, 0, maxDim * 2); // 根据模型大小动态调整相机距离
+            camera.lookAt(0, 0, 0);
+            controls.target.set(0, 0, 0); // 确保控制器目标在场景中心
+            controls.update();
+            
+            // 重置控制器
+            controls.reset();
+        },
+        function(xhr) {
+            console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+        function(error) {
+            console.error('An error happened', error);
+            document.getElementById('model-description').textContent = '模型加载失败，请检查文件格式';
         }
+    );
+}
         
         function animate() {
             requestAnimationFrame(animate);
