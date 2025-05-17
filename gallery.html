@@ -4,8 +4,104 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D展厅 - 3D社交平台</title>
-    <link rel="stylesheet" href="css/gallery.css">
-    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        
+        nav ul li {
+            margin: 0 1rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+        
+        #model-container {
+            width: 800px;
+            height: 500px;
+            background-color: #eee;
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .model-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .model-controls button {
+            padding: 0.5rem 1rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .model-info {
+            max-width: 800px;
+            background-color: white;
+            padding: 1rem;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .social-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-actions button {
+            padding: 0.5rem 1rem;
+            background-color: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        #model-upload {
+            display: none;
+        }
+        
+        .upload-btn {
+            padding: 0.5rem 1rem;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -25,12 +121,13 @@
             <button id="rotate-btn">旋转</button>
             <button id="zoom-in-btn">放大</button>
             <button id="zoom-out-btn">缩小</button>
-            <input type="file" id="model-upload" accept=".obj">
+            <label for="model-upload" class="upload-btn">上传OBJ模型</label>
+            <input type="file" id="model-upload" accept=".obj,.mtl">
         </div>
         
         <div class="model-info">
-            <h2 id="model-title">示例模型</h2>
-            <p id="model-description">这是一个示例3D模型，你可以上传自己的OBJ格式模型</p>
+            <h2 id="model-title">3D模型展示</h2>
+            <p id="model-description">请上传您的OBJ格式3D模型文件</p>
             <div class="social-actions">
                 <button class="like-btn">❤️ 点赞</button>
                 <button class="comment-btn">💬 评论</button>
@@ -39,9 +136,146 @@
         </div>
     </main>
     
-    <script src="js/three.min.js"></script>
-    <script src="js/OBJLoader.js"></script>
-    <script src="js/OrbitControls.js"></script>
-    <script src="js/gallery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/OBJLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script>
+        // 初始化Three.js场景
+        let scene, camera, renderer, controls, model;
+        
+        function init() {
+            // 创建场景
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xf0f0f0);
+            
+            // 创建相机
+            camera = new THREE.PerspectiveCamera(75, 800 / 500, 0.1, 1000);
+            camera.position.z = 5;
+            
+            // 创建渲染器
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(800, 500);
+            document.getElementById('model-container').appendChild(renderer.domElement);
+            
+            // 添加光源
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(1, 1, 1);
+            scene.add(directionalLight);
+            
+            // 添加坐标轴辅助
+            const axesHelper = new THREE.AxesHelper(5);
+            scene.add(axesHelper);
+            
+            // 添加轨道控制器
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            
+            // 添加网格地面
+            const gridHelper = new THREE.GridHelper(10, 10);
+            scene.add(gridHelper);
+            
+            // 设置按钮事件
+            setupControls();
+            
+            // 开始动画循环
+            animate();
+        }
+        
+        function setupControls() {
+            // 旋转按钮
+            document.getElementById('rotate-btn').addEventListener('click', function() {
+                controls.autoRotate = !controls.autoRotate;
+                this.textContent = controls.autoRotate ? "停止旋转" : "旋转";
+            });
+            
+            // 放大按钮
+            document.getElementById('zoom-in-btn').addEventListener('click', function() {
+                camera.fov -= 5;
+                camera.updateProjectionMatrix();
+            });
+            
+            // 缩小按钮
+            document.getElementById('zoom-out-btn').addEventListener('click', function() {
+                camera.fov += 5;
+                camera.updateProjectionMatrix();
+            });
+            
+            // 文件上传
+            document.getElementById('model-upload').addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    loadModel(event.target.result);
+                };
+                reader.readAsDataURL(file);
+                
+                // 更新模型信息
+                document.getElementById('model-title').textContent = file.name.replace('.obj', '');
+                document.getElementById('model-description').textContent = `已加载模型: ${file.name}`;
+            });
+        }
+        
+        function loadModel(url) {
+            // 移除现有模型
+            if (model) {
+                scene.remove(model);
+            }
+            
+            // 创建加载器
+            const loader = new THREE.OBJLoader();
+            
+            // 加载模型
+            loader.load(
+                url,
+                function(object) {
+                    model = object;
+                    
+                    // 计算模型边界框以居中显示
+                    const bbox = new THREE.Box3().setFromObject(model);
+                    const center = bbox.getCenter(new THREE.Vector3());
+                    const size = bbox.getSize(new THREE.Vector3());
+                    
+                    // 调整模型位置和缩放
+                    model.position.x += (model.position.x - center.x);
+                    model.position.y += (model.position.y - center.y);
+                    model.position.z += (model.position.z - center.z);
+                    
+                    // 自动缩放以适应视图
+                    const maxDim = Math.max(size.x, size.y, size.z);
+                    const scale = 5.0 / maxDim;
+                    model.scale.set(scale, scale, scale);
+                    
+                    // 添加到场景
+                    scene.add(model);
+                    
+                    // 重置相机位置
+                    camera.position.z = 10;
+                    controls.reset();
+                },
+                function(xhr) {
+                    console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+                },
+                function(error) {
+                    console.error('An error happened', error);
+                    document.getElementById('model-description').textContent = '模型加载失败，请检查文件格式';
+                }
+            );
+        }
+        
+        function animate() {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        
+        // 初始化场景
+        window.onload = init;
+    </script>
 </body>
 </html>
