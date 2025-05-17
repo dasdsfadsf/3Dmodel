@@ -3,86 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>社交平台</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>3D社交平台</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <header>
-        <div class="container">
-            <h1>社交平台</h1>
-            <div class="user-info">
-                <img src="https://via.placeholder.com/40" alt="用户头像" class="avatar">
-                <span>用户名</span>
-            </div>
-        </div>
+        <h1>3D社交平台</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="gallery.html">3D展厅</a></li>
+                <li><a href="social.html">社交圈</a></li>
+            </ul>
+        </nav>
     </header>
     
-    <div class="container">
-        <div class="post-editor">
-            <textarea id="post-content" placeholder="分享你的想法..."></textarea>
-            <div class="post-actions">
-                <div class="image-upload">
-                    <input type="file" id="image-input" accept="image/*" multiple>
-                    <label for="image-input" class="upload-btn">添加图片</label>
-                    <div id="image-preview"></div>
-                </div>
-                <button id="post-btn">发布</button>
+    <main>
+        <section class="hero">
+            <h2>探索3D创意世界</h2>
+            <p>分享你的3D作品，与全球创作者交流</p>
+            <div class="cta-buttons">
+                <a href="gallery.html" class="btn">浏览作品</a>
+                <a href="social.html" class="btn">加入社区</a>
             </div>
-        </div>
+        </section>
         
-        <div class="feed" id="feed">
-            <!-- 示例帖子 -->
-            <div class="post">
-                <div class="post-header">
-                    <img src="https://via.placeholder.com/40" alt="用户头像" class="avatar">
-                    <span class="post-user">张三</span>
-                    <span class="post-time">2小时前</span>
-                </div>
-                <div class="post-content">
-                    今天天气真好，出去散步看到了美丽的日落！
-                </div>
-                <div class="post-images">
-                    <img src="https://via.placeholder.com/600x400" alt="帖子图片" class="post-image">
-                </div>
-                <div class="post-actions">
-                    <div class="action-btn like-btn">点赞</div>
-                    <div class="action-btn comment-btn">评论</div>
-                    <div class="action-btn share-btn">分享</div>
-                </div>
-                <div class="comments" style="display: none;">
-                    <input type="text" class="comment-input" placeholder="评论...">
-                    <button class="comment-btn">发布评论</button>
-                    <ul class="comment-list"></ul>
-                </div>
+        <section class="features">
+            <div class="feature-card">
+                <h3>3D展示</h3>
+                <p>在浏览器中直接查看3D模型</p>
             </div>
-            
-            <div class="post">
-                <div class="post-header">
-                    <img src="https://via.placeholder.com/40" alt="用户头像" class="avatar">
-                    <span class="post-user">李四</span>
-                    <span class="post-time">昨天</span>
-                </div>
-                <div class="post-content">
-                    分享一个我最近完成的3D模型作品，希望大家喜欢！
-                </div>
-                <div class="post-images">
-                    <img src="https://via.placeholder.com/600x400" alt="3D模型" class="post-image">
-                    <img src="https://via.placeholder.com/600x400" alt="3D模型" class="post-image">
-                </div>
-                <div class="post-actions">
-                    <div class="action-btn like-btn">点赞</div>
-                    <div class="action-btn comment-btn">评论</div>
-                    <div class="action-btn share-btn">分享</div>
-                </div>
-                <div class="comments" style="display: none;">
-                    <input type="text" class="comment-input" placeholder="评论...">
-                    <button class="comment-btn">发布评论</button>
-                    <ul class="comment-list"></ul>
-                </div>
+            <div class="feature-card">
+                <h3>社交互动</h3>
+                <p>点赞、评论和收藏作品</p>
             </div>
-        </div>
-    </div>
-
-    <script src="js/script.js"></script>
+            <div class="feature-card">
+                <h3>创作者社区</h3>
+                <p>与志同道合的创作者交流</p>
+            </div>
+        </section>
+    </main>
+    
+    <footer>
+        <p>&copy; 2023 3D社交平台</p>
+    </footer>
 </body>
 </html>
