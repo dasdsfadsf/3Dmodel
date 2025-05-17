@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社交圈 - 3D社交平台</title>
+    <link rel="stylesheet" href="css/social.css">
+</head>
+<body>
+    <header>
+        <h1>社交圈</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="gallery.html">3D展厅</a></li>
+                <li><a href="social.html">社交圈</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div class="post-form">
+            <textarea placeholder="分享你的3D创作心得..."></textarea>
+            <div class="form-actions">
+                <input type="file" id="image-upload" accept="image/*">
+                <button class="post-btn">发布</button>
+            </div>
+        </div>
+        
+        <div class="posts-container">
+            <div class="post-card">
+                <div class="post-header">
+                    <img src="images/avatar1.jpg" alt="用户头像" class="avatar">
+                    <span class="username">3D艺术家</span>
+                </div>
+                <div class="post-content">
+                    <p>这是我最新创作的3D角色模型，使用了Blender和Substance Painter制作！</p>
+                    <img src="images/model1.jpg" alt="3D模型" class="post-image">
+                </div>
+                <div class="post-actions">
+                    <button class="like-btn">❤️ 42</button>
+                    <button class="comment-btn">💬 评论</button>
+                </div>
+            </div>
+            
+            <div class="post-card">
+                <div class="post-header">
+                    <img src="images/avatar2.jpg" alt="用户头像" class="avatar">
+                    <span class="username">建筑可视化师</span>
+                </div>
+                <div class="post-content">
+                    <p>分享一个现代别墅的3D可视化项目，完全使用Three.js在网页中渲染。</p>
+                    <a href="gallery.html?model=villa" class="model-link">查看3D模型</a>
+                </div>
+                <div class="post-actions">
+                    <button class="like-btn">❤️ 28</button>
+                    <button class="comment-btn">💬 评论</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script src="js/social.js"></script>
+</body>
+</html>
