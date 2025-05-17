@@ -410,16 +410,11 @@
 
     // 渲染所有帖子
     function renderPosts() {
-      
         const container = document.querySelector('.posts-container');
         container.innerHTML = '';
-        post.comments.forEach(comment => {
-        commentsList.appendChild(createCommentElement(comment));
-        });
+
         posts.forEach(post => {
             const template = document.getElementById('post-template').content.cloneNode(true);
-            const postCard = template.querySelector('.post-card');
-            postCard.dataset.id = post.id; // 添加data-id属性
             template.querySelector('.post-text').textContent = post.content;
             template.querySelector('.like-count').textContent = post.likes;
 
@@ -443,14 +438,14 @@
     }
 
     // 点赞处理
-  function handleLike(e) {
-    const postElement = e.target.closest('.post-card');
-    const postId = parseInt(postElement.dataset.id);
-    const post = posts.find(p => p.id === postId);
-    post.likes++;
-    savePosts();
-    postElement.querySelector('.like-count').textContent = post.likes; // 直接更新DOM
-}
+    function handleLike(e) {
+        const postElement = e.target.closest('.post-card');
+        const postId = parseInt(postElement.dataset.id);
+        const post = posts.find(p => p.id === postId);
+        post.likes++;
+        savePosts();
+        postElement.querySelector('.like-count').textContent = post.likes;
+    }
 
     // 评论功能
     function toggleComments(e) {
@@ -458,32 +453,26 @@
         commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
     }
 
- // 修改addComment函数
-function addComment(e) {
-    const input = e.target;
-    const commentText = input.value.trim();
-    if (!commentText || e.key !== 'Enter') return;
+    function addComment(e) {
+        const input = e.target;
+        const commentText = input.value.trim();
+        if (!commentText) return;
 
-    const postElement = e.target.closest('.post-card');
-    const postId = parseInt(postElement.dataset.id);
-    const post = posts.find(p => p.id === postId);
+        const postElement = e.target.closest('.post-card');
+        const postId = parseInt(postElement.dataset.id);
+        const post = posts.find(p => p.id === postId);
 
-    const newComment = {
-        author: "当前用户",
-        text: commentText,
-        timestamp: new Date().toLocaleTimeString()
-    };
+        const newComment = {
+            author: "当前用户",
+            text: commentText,
+            timestamp: new Date().toLocaleString()
+        };
 
-    post.comments.push(newComment);
-    savePosts();
-    
-    // 添加新评论到列表
-    const commentsList = postElement.querySelector('.comments-list');
-    commentsList.appendChild(createCommentElement(newComment));
-    
-    input.value = '';
-    e.preventDefault(); // 阻止默认换行行为
-}
+        post.comments.push(newComment);
+        savePosts();
+        postElement.querySelector('.comments-list').appendChild(createCommentElement(newComment));
+        input.value = '';
+    }
 
     // 辅助函数
     function createCommentElement(comment) {
@@ -491,13 +480,10 @@ function addComment(e) {
         div.className = 'comment';
         div.innerHTML = `
             <img src="images/comment-avatar.jpg" class="comment-avatar">
-            <div class="comment-body">
-                <div class=comment-meta>
+            <div>
                 <div class="comment-author">${comment.author}</div>
-
+                <div class="comment-text">${comment.text}</div>
                 <div class="comment-time">${comment.timestamp}</div>
-                </div>
-                 <div class="comment-text">${comment.text}</div>
             </div>
         `;
         return div;
