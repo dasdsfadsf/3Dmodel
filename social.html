@@ -6,7 +6,6 @@
     <title>社交圈 - 3D社交平台</title>
     <style>
         /* 基础样式 */
-       /* 基础样式 */
         * {
             margin: 0;
             padding: 0;
@@ -21,17 +20,24 @@
 
         /* 修改后的header样式 */
         header {
-        background-color: #2c3e50;
-        color: white;
-        padding: 1rem;
-        text-align: center;
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
         }
 
         nav ul {
             display: flex;
             gap: 2rem;
             list-style: none;
-            margin-top: 1rem;
+            margin-top: 0;
         }
 
         nav a {
@@ -193,60 +199,59 @@
             }
         }
 
+        /* 新增评论相关样式 */
+        .comments-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #eee;
+        }
 
-          /* 新增评论相关样式 */
-    .comments-section {
-        margin-top: 1rem;
-        padding-top: 1rem;
-        border-top: 1px solid #eee;
-    }
+        .comment {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
 
-    .comment {
-        display: flex;
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
+        .comment-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
 
-    .comment-avatar {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-    }
+        .comment-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            margin-top: 1rem;
+        }
 
-    .comment-input {
-        width: 100%;
-        padding: 0.5rem;
-        border: 1px solid #ddd;
-        border-radius: 20px;
-        margin-top: 1rem;
-    }
+        /* 图片预览样式 */
+        .image-preview {
+            position: relative;
+            margin: 1rem 0;
+        }
 
-    /* 图片预览样式 */
-    .image-preview {
-        position: relative;
-        margin: 1rem 0;
-    }
+        .preview-image {
+            max-width: 200px;
+            border-radius: 8px;
+            margin-right: 1rem;
+        }
 
-    .preview-image {
-        max-width: 200px;
-        border-radius: 8px;
-        margin-right: 1rem;
-    }
-
-    .remove-image {
-        position: absolute;
-        top: -10px;
-        right: -10px;
-        background: red;
-        color: white;
-        border-radius: 50%;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    }
+        .remove-image {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -275,7 +280,7 @@
         
         <div class="posts-container">
             <!-- 示例帖子1 -->
-            <div class="post-card">
+            <div class="post-card" data-id="1">
                 <div class="post-header">
                     <img src="images/avatar1.jpg" alt="用户头像" class="avatar">
                     <span class="username">3D艺术家</span>
@@ -291,7 +296,7 @@
             </div>
 
             <!-- 示例帖子2 -->
-            <div class="post-card">
+            <div class="post-card" data-id="2">
                 <div class="post-header">
                     <img src="images/avatar2.jpg" alt="用户头像" class="avatar">
                     <span class="username">建筑可视化师</span>
@@ -308,202 +313,201 @@
         </div>
     </main>
     
-    <script src="js/social.js"></script>
-
-<!-- 在<body>最后添加模板 -->
-<template id="post-template">
-    <div class="post-card">
-        <div class="post-header">
-            <img src="images/default-avatar.jpg" alt="用户头像" class="avatar">
-            <span class="username">新用户</span>
-        </div>
-        <div class="post-content">
-            <p class="post-text"></p>
-            <div class="image-container"></div>
-            <a class="model-link" style="display: none">查看3D模型</a>
-        </div>
-        <div class="post-actions">
-            <button class="like-btn">❤️ <span class="like-count">0</span></button>
-            <button class="comment-btn">💬 评论</button>
-        </div>
-        <div class="comments-section" style="display: none">
-            <div class="comments-list"></div>
-            <input type="text" class="comment-input" placeholder="写下你的评论...">
-        </div>
-    </div>
-</template>
-
-<!-- 修改现有<script>标签内容 -->
-<script>
-    // 帖子数据存储
-    let posts = JSON.parse(localStorage.getItem('posts')) || [];
-
-    // 初始化页面
-    document.addEventListener('DOMContentLoaded', () => {
-        renderPosts();
-        initEventListeners();
-    });
-
-    // 事件监听初始化
-    function initEventListeners() {
-        // 图片上传
-        document.getElementById('image-upload').addEventListener('change', handleImageUpload);
-        
-        // 发布按钮
-        document.querySelector('.post-btn').addEventListener('click', createPost);
-        
-        // 使用事件委托处理动态内容
-        document.querySelector('.posts-container').addEventListener('click', (e) => {
-            if (e.target.closest('.like-btn')) handleLike(e);
-            if (e.target.closest('.comment-btn')) toggleComments(e);
-        });
-        
-        // 评论输入
-        document.querySelector('.posts-container').addEventListener('keypress', (e) => {
-            if (e.target.classList.contains('comment-input') && e.key === 'Enter') {
-                addComment(e);
-            }
-        });
-    }
-
-    // 图片上传处理
-    function handleImageUpload(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const preview = document.createElement('div');
-            preview.className = 'image-preview';
-            preview.innerHTML = `
-                <img src="${event.target.result}" class="preview-image">
-                <div class="remove-image" onclick="removePreview(this)">×</div>
-            `;
-            document.querySelector('.post-form').appendChild(preview);
-        };
-        reader.readAsDataURL(file);
-    }
-
-    // 创建新帖子
-    function createPost() {
-        const textarea = document.querySelector('.post-form textarea');
-        const content = textarea.value.trim();
-        const images = Array.from(document.querySelectorAll('.preview-image'))
-            .map(img => img.src);
-
-        if (!content && images.length === 0) return;
-
-        const newPost = {
-            id: Date.now(),
-            content,
-            images,
-            likes: 0,
-            comments: []
-        };
-
-        posts.unshift(newPost);
-        savePosts();
-        renderPosts();
-        clearForm();
-    }
-
-    // 渲染所有帖子
-    function renderPosts() {
-        const container = document.querySelector('.posts-container');
-        container.innerHTML = '';
-
-        posts.forEach(post => {
-            const template = document.getElementById('post-template').content.cloneNode(true);
-            template.querySelector('.post-text').textContent = post.content;
-            template.querySelector('.like-count').textContent = post.likes;
-
-            // 添加图片
-            const imageContainer = template.querySelector('.image-container');
-            post.images.forEach(src => {
-                const img = document.createElement('img');
-                img.className = 'post-image';
-                img.src = src;
-                imageContainer.appendChild(img);
-            });
-
-            // 添加评论
-            const commentsList = template.querySelector('.comments-list');
-            post.comments.forEach(comment => {
-                commentsList.appendChild(createCommentElement(comment));
-            });
-
-            container.appendChild(template);
-        });
-    }
-
-    // 点赞处理
-    function handleLike(e) {
-        const postElement = e.target.closest('.post-card');
-        const postId = parseInt(postElement.dataset.id);
-        const post = posts.find(p => p.id === postId);
-        post.likes++;
-        savePosts();
-        postElement.querySelector('.like-count').textContent = post.likes;
-    }
-
-    // 评论功能
-    function toggleComments(e) {
-        const commentsSection = e.target.closest('.post-card').querySelector('.comments-section');
-        commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function addComment(e) {
-        const input = e.target;
-        const commentText = input.value.trim();
-        if (!commentText) return;
-
-        const postElement = e.target.closest('.post-card');
-        const postId = parseInt(postElement.dataset.id);
-        const post = posts.find(p => p.id === postId);
-
-        const newComment = {
-            author: "当前用户",
-            text: commentText,
-            timestamp: new Date().toLocaleString()
-        };
-
-        post.comments.push(newComment);
-        savePosts();
-        postElement.querySelector('.comments-list').appendChild(createCommentElement(newComment));
-        input.value = '';
-    }
-
-    // 辅助函数
-    function createCommentElement(comment) {
-        const div = document.createElement('div');
-        div.className = 'comment';
-        div.innerHTML = `
-            <img src="images/comment-avatar.jpg" class="comment-avatar">
-            <div>
-                <div class="comment-author">${comment.author}</div>
-                <div class="comment-text">${comment.text}</div>
-                <div class="comment-time">${comment.timestamp}</div>
+    <!-- 在<body>最后添加模板 -->
+    <template id="post-template">
+        <div class="post-card">
+            <div class="post-header">
+                <img src="images/default-avatar.jpg" alt="用户头像" class="avatar">
+                <span class="username">新用户</span>
             </div>
-        `;
-        return div;
-    }
+            <div class="post-content">
+                <p class="post-text"></p>
+                <div class="image-container"></div>
+                <a class="model-link" style="display: none">查看3D模型</a>
+            </div>
+            <div class="post-actions">
+                <button class="like-btn">❤️ <span class="like-count">0</span></button>
+                <button class="comment-btn">💬 评论</button>
+            </div>
+            <div class="comments-section" style="display: none">
+                <div class="comments-list"></div>
+                <input type="text" class="comment-input" placeholder="写下你的评论...">
+            </div>
+        </div>
+    </template>
 
-    function savePosts() {
-        localStorage.setItem('posts', JSON.stringify(posts));
-    }
+    <!-- 修改现有<script>标签内容 -->
+    <script>
+        // 帖子数据存储
+        let posts = JSON.parse(localStorage.getItem('posts')) || [];
 
-    function clearForm() {
-        document.querySelector('.post-form textarea').value = '';
-        document.querySelectorAll('.image-preview').forEach(el => el.remove());
-    }
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPosts();
+            initEventListeners();
+        });
 
-    // 移除图片预览
-    window.removePreview = function(button) {
-        button.parentElement.remove();
-    }
-</script>
+        // 事件监听初始化
+        function initEventListeners() {
+            // 图片上传
+            document.getElementById('image-upload').addEventListener('change', handleImageUpload);
+            
+            // 发布按钮
+            document.querySelector('.post-btn').addEventListener('click', createPost);
+            
+            // 使用事件委托处理动态内容
+            document.querySelector('.posts-container').addEventListener('click', (e) => {
+                if (e.target.closest('.like-btn')) handleLike(e);
+                if (e.target.closest('.comment-btn')) toggleComments(e);
+            });
+            
+            // 评论输入
+            document.querySelector('.posts-container').addEventListener('keypress', (e) => {
+                if (e.target.classList.contains('comment-input') && e.key === 'Enter') {
+                    addComment(e);
+                }
+            });
+        }
 
+        // 图片上传处理
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
 
-    
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const preview = document.createElement('div');
+                preview.className = 'image-preview';
+                preview.innerHTML = `
+                    <img src="${event.target.result}" class="preview-image">
+                    <div class="remove-image" onclick="removePreview(this)">×</div>
+                `;
+                document.querySelector('.post-form').appendChild(preview);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 创建新帖子
+        function createPost() {
+            const textarea = document.querySelector('.post-form textarea');
+            const content = textarea.value.trim();
+            const images = Array.from(document.querySelectorAll('.preview-image'))
+                .map(img => img.src);
+
+            if (!content && images.length === 0) return;
+
+            const newPost = {
+                id: Date.now(),
+                content,
+                images,
+                likes: 0,
+                comments: []
+            };
+
+            posts.unshift(newPost);
+            savePosts();
+            renderPosts();
+            clearForm();
+        }
+
+        // 渲染所有帖子
+        function renderPosts() {
+            const container = document.querySelector('.posts-container');
+            container.innerHTML = '';
+
+            posts.forEach(post => {
+                const template = document.getElementById('post-template').content.cloneNode(true);
+                const postCard = template.querySelector('.post-card');
+                postCard.dataset.id = post.id; // 添加data-id属性
+
+                template.querySelector('.post-text').textContent = post.content;
+                template.querySelector('.like-count').textContent = post.likes;
+
+                // 添加图片
+                const imageContainer = template.querySelector('.image-container');
+                post.images.forEach(src => {
+                    const img = document.createElement('img');
+                    img.className = 'post-image';
+                    img.src = src;
+                    imageContainer.appendChild(img);
+                });
+
+                // 添加评论
+                const commentsList = template.querySelector('.comments-list');
+                post.comments.forEach(comment => {
+                    commentsList.appendChild(createCommentElement(comment));
+                });
+
+                container.appendChild(postCard);
+            });
+        }
+
+        // 点赞处理
+        function handleLike(e) {
+            const postElement = e.target.closest('.post-card');
+            const postId = parseInt(postElement.dataset.id);
+            const post = posts.find(p => p.id === postId);
+            post.likes++;
+            savePosts();
+            postElement.querySelector('.like-count').textContent = post.likes;
+        }
+
+        // 评论功能
+        function toggleComments(e) {
+            const commentsSection = e.target.closest('.post-card').querySelector('.comments-section');
+            commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addComment(e) {
+            const input = e.target;
+            const commentText = input.value.trim();
+            if (!commentText) return;
+
+            const postElement = e.target.closest('.post-card');
+            const postId = parseInt(postElement.dataset.id);
+            const post = posts.find(p => p.id === postId);
+
+            const newComment = {
+                author: "当前用户",
+                text: commentText,
+                timestamp: new Date().toLocaleString()
+            };
+
+            post.comments.push(newComment);
+            savePosts();
+            postElement.querySelector('.comments-list').appendChild(createCommentElement(newComment));
+            input.value = '';
+            e.stopPropagation(); // 阻止事件冒泡
+        }
+
+        // 辅助函数
+        function createCommentElement(comment) {
+            const div = document.createElement('div');
+            div.className = 'comment';
+            div.innerHTML = `
+                <img src="images/comment-avatar.jpg" class="comment-avatar">
+                <div>
+                    <div class="comment-author">${comment.author}</div>
+                    <div class="comment-text">${comment.text}</div>
+                    <div class="comment-time">${comment.timestamp}</div>
+                </div>
+            `;
+            return div;
+        }
+
+        function savePosts() {
+            localStorage.setItem('posts', JSON.stringify(posts));
+        }
+
+        function clearForm() {
+            document.querySelector('.post-form textarea').value = '';
+            document.querySelectorAll('.image-preview').forEach(el => el.remove());
+        }
+
+        // 移除图片预览
+        window.removePreview = function(button) {
+            button.parentElement.remove();
+        }
+    </script>
 </body>
 </html>
