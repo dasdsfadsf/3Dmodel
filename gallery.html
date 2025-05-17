@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D展厅 - 3D社交平台</title>
+    <link rel="stylesheet" href="css/gallery.css">
+</head>
+<body>
+    <header>
+        <h1>3D展厅</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">首页</a></li>
+                <li><a href="gallery.html">3D展厅</a></li>
+                <li><a href="social.html">社交圈</a></li>
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        <div id="model-container"></div>
+        <div class="model-controls">
+            <button id="rotate-btn">旋转</button>
+            <button id="zoom-in-btn">放大</button>
+            <button id="zoom-out-btn">缩小</button>
+            <input type="file" id="model-upload" accept=".obj">
+        </div>
+        
+        <div class="model-info">
+            <h2 id="model-title">示例模型</h2>
+            <p id="model-description">这是一个示例3D模型，你可以上传自己的OBJ格式模型</p>
+            <div class="social-actions">
+                <button class="like-btn">❤️ 点赞</button>
+                <button class="comment-btn">💬 评论</button>
+                <button class="share-btn">↗️ 分享</button>
+            </div>
+        </div>
+    </main>
+    
+    <script src="js/three.min.js"></script>
+    <script src="js/OBJLoader.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/gallery.js"></script>
+</body>
+</html>
