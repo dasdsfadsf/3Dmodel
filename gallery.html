@@ -101,6 +101,16 @@
             border-radius: 4px;
             cursor: pointer;
         }
+        
+        .model-selector {
+            margin-bottom: 1rem;
+        }
+        
+        .model-selector select {
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -116,6 +126,14 @@
     </header>
     
     <main>
+        <div class="model-selector">
+            <select id="model-select">
+                <option value="">选择模型...</option>
+                <option value="models/基地.obj">基地</option>
+                <option value="models/基地2.obj">基地2</option>
+            </select>
+        </div>
+        
         <div id="model-container"></div>
         <div class="model-controls">
             <button id="rotate-btn">旋转</button>
@@ -127,7 +145,7 @@
         
         <div class="model-info">
             <h2 id="model-title">3D模型展示</h2>
-            <p id="model-description">请上传您的OBJ格式3D模型文件</p>
+            <p id="model-description">请从下拉菜单中选择或上传您的OBJ格式3D模型文件</p>
             <div class="social-actions">
                 <button class="like-btn">❤️ 点赞</button>
                 <button class="comment-btn">💬 评论</button>
@@ -186,6 +204,19 @@
         }
         
         function setupControls() {
+            // 模型选择器
+            document.getElementById('model-select').addEventListener('change', function(e) {
+                const modelPath = e.target.value;
+                if (modelPath) {
+                    loadModel(modelPath);
+                    
+                    // 更新模型信息
+                    const modelName = modelPath.split('/').pop().replace('.obj', '');
+                    document.getElementById('model-title').textContent = modelName;
+                    document.getElementById('model-description').textContent = `已加载模型: ${modelName}`;
+                }
+            });
+            
             // 旋转按钮
             document.getElementById('rotate-btn').addEventListener('click', function() {
                 controls.autoRotate = !controls.autoRotate;
